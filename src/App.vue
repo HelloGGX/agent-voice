@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Mic, Activity } from "lucide-vue-next";
 
 
+
 </script>
 
 <template>
@@ -41,12 +42,10 @@ import { Mic, Activity } from "lucide-vue-next";
             <Avatar v-if="!msg.isUser" class="h-8 w-8">
               <AvatarFallback>AI</AvatarFallback>
             </Avatar>
-            <Card
-              :class="[
-                'p-4 max-w-[85%]',
-                msg.isUser ? 'bg-primary text-primary-foreground' : '',
-              ]"
-            >
+            <Card :class="[
+              'p-4 max-w-[85%]',
+              msg.isUser ? 'bg-primary text-primary-foreground' : '',
+            ]">
               <p>{{ msg.text }}</p>
             </Card>
             <Avatar v-if="msg.isUser" class="h-8 w-8">
@@ -67,31 +66,16 @@ import { Mic, Activity } from "lucide-vue-next";
       </div>
     </main>
 
-    <!-- 在模板中添加错误提示 -->
-    <div v-if="!isSupported" class="p-4 text-center text-destructive">
-      当前浏览器不支持语音功能，请使用最新版Chrome浏览器
-    </div>
     <!-- 语音控制栏 -->
     <footer class="p-8 border-t dark:border-gray-700">
       <div class="max-w-3xl mx-auto flex justify-center">
-        <Button
-          @click="toggleRecording"
-          :disabled="!isSupported"
-          :variant="isRecording ? 'destructive' : 'default'"
-          size="lg"
-          class="rounded-full h-16 w-16 relative"
-        >
+        <Button @click="toggleRecording" :disabled="!isSupported" :variant="isRecording ? 'destructive' : 'default'"
+          size="lg" class="rounded-full h-16 w-16 relative">
           <Mic class="h-8 w-8" />
           <span v-if="isSpeaking" class="absolute -top-2 -right-2">
             <Activity class="h-4 w-4 animate-pulse" />
           </span>
         </Button>
-
-        <!-- 权限拒绝提示 -->
-        <!-- <div v-if="errorMessage" class="text-center text-destructive text-sm">
-          <AlertCircle class="h-4 w-4 inline-block mr-1" />
-          {{ errorMessage }}
-        </div> -->
       </div>
     </footer>
   </div>
