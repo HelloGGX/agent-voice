@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Mic, Activity } from "lucide-vue-next";
-import { ref, watch, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { useConversation } from "./hooks/useConversation";
 
 const conversationStorage = useConversation();
@@ -20,9 +20,13 @@ const isSpeaking = ref(false);
 const SYNTH = window.speechSynthesis;
 
 // 自动保存对话记录
-watch(messages, (newVal) => {
-  conversationStorage.value  = JSON.stringify(newVal)
-}, { deep: true })
+watch(
+  messages,
+  (newVal) => {
+    conversationStorage.value = JSON.stringify(newVal);
+  },
+  { deep: true },
+);
 
 // 语音识别逻辑
 const toggleRecording = () => {

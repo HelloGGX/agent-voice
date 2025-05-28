@@ -46,7 +46,7 @@ app.get("/sse", (req, res) => {
 
   console.log(
     `收到SSE连接请求 [${connectionId}]，来源:`,
-    clientInfo.origin || "unknown"
+    clientInfo.origin || "unknown",
   );
 
   // 设置SSE头
@@ -76,7 +76,7 @@ app.get("/sse", (req, res) => {
   });
   console.log(
     `新的SSE连接已建立 [${connectionId}]，当前连接数:`,
-    connections.size
+    connections.size,
   );
 
   // 定期发送心跳
@@ -86,7 +86,7 @@ app.get("/sse", (req, res) => {
       connections.delete(connectionId);
       console.log(
         `心跳检测到连接已断开 [${connectionId}]，剩余连接数:`,
-        connections.size
+        connections.size,
       );
       return;
     }
@@ -96,7 +96,7 @@ app.get("/sse", (req, res) => {
         `data: ${JSON.stringify({
           type: "heartbeat",
           timestamp: Date.now(),
-        })}\n\n`
+        })}\n\n`,
       );
     } catch (error) {
       console.error(`发送心跳失败 [${connectionId}]:`, error.message);
@@ -111,7 +111,7 @@ app.get("/sse", (req, res) => {
     connections.delete(connectionId);
     console.log(
       `SSE连接已断开 [${connectionId}]，剩余连接数:`,
-      connections.size
+      connections.size,
     );
   });
 
@@ -174,64 +174,18 @@ app.get("/api/flight/:flightNumber", (req, res) => {
 // 处理用户消息的逻辑
 async function processUserMessage(message) {
   const lowerMessage = message.toLowerCase();
-
-  if (lowerMessage.includes("值机") || lowerMessage.includes("登机")) {
-    // 模拟查询航班信息
-    const flightInfo = mockFlightData["CA1234"];
-
-    // 发送航班信息确认消息
-    setTimeout(() => {
-      broadcastMessage({
-        type: "flight_info",
-        data: {
-          ...flightInfo,
-          needsConfirmation: true,
-          message: "请确认以下航班信息是否正确？",
-        },
-        timestamp: Date.now(),
-      });
-    }, 1000);
-
-    return {
-      text: "正在为您查询航班信息，请稍候...",
-      type: "assistant",
-    };
-  } else if (lowerMessage.includes("确认")) {
-    // 处理确认
-    setTimeout(() => {
-      broadcastMessage({
-        type: "boarding_pass",
-        data: {
-          message: "登机牌已生成",
-          barcode: "ABC123456789",
-          instructions: "请保管好您的登机牌，并在起飞前30分钟到达登机口。",
-        },
-        timestamp: Date.now(),
-      });
-    }, 2000);
-
-    return {
-      text: "✅ 信息已确认，正在为您生成登机牌...",
-      type: "assistant",
-    };
-  } else if (lowerMessage.includes("帮助") || lowerMessage.includes("功能")) {
-    return {
-      text: `我可以帮您办理以下业务：
-      
+  return {
+    text: `
+${lowerMessage}
+    我可以帮您办理以下业务：
 🛫 办理值机手续
-📋 查询航班信息  
+📋 查询航班信息
 🎫 打印登机牌
 ❓ 其他咨询服务
 
 请说出您需要办理的业务，例如"我要值机"。`,
-      type: "assistant",
-    };
-  } else {
-    return {
-      text: '抱歉，我没有理解您的请求。您可以说"我要值机"来开始办理登机手续，或者说"帮助"查看所有功能。',
-      type: "assistant",
-    };
-  }
+    type: "assistant",
+  };
 }
 
 // 广播消息到所有连接
