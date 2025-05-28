@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "my-tauri-app",
+  "productName": "agent-voice",
   "version": "0.1.0",
-  "identifier": "com.my-tauri-app.app",
+  "identifier": "com.agent-voice.app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "my-tauri-app",
+        "title": "agent-voice",
         "width": 800,
         "height": 600
       }

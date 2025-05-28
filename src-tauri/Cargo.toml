@@ -1,5 +1,5 @@
 [package]
-name = "my-tauri-app"
+name = "agent-voice"
 version = "0.1.0"
 description = "A Tauri App"
 authors = ["wangguolong"]
