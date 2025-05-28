@@ -39,7 +39,7 @@ app.get("/sse", (req, res) => {
   const connectionId = ++connectionIdCounter;
   const clientInfo = {
     id: connectionId,
-    ip: req.ip || req.connection.remoteAddress,
+    ip: req.ip || req.socket.remoteAddress,
     userAgent: req.headers["user-agent"],
     origin: req.headers.origin,
   };
