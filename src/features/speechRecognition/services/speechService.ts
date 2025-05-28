@@ -49,4 +49,22 @@ export class SpeechService {
       callbacks.forEach((callback) => callback(data));
     }
   }
+
+  // 事件监听器管理
+  addEventListener(event: string, callback: (data?: Record<string, unknown>) => void): void {
+    if (!this.listeners.has(event)) {
+      this.listeners.set(event, []);
+    }
+    this.listeners.get(event)!.push(callback);
+  }
+
+  removeEventListener(event: string, callback: (data?: Record<string, unknown>) => void): void {
+    const callbacks = this.listeners.get(event);
+    if (callbacks) {
+      const index = callbacks.indexOf(callback);
+      if (index > -1) {
+        callbacks.splice(index, 1);
+      }
+    }
+  }
 }
