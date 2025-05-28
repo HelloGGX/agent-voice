@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Mic, Activity } from "lucide-vue-next";
+import { ref } from "vue";
 
-
+const messages = ref<{ id: string; text: string; isUser: boolean }[]>([]);
 
 </script>
 
@@ -37,7 +38,7 @@ import { Mic, Activity } from "lucide-vue-next";
         </div>
 
         <!-- 对话记录 -->
-        <template v-for="(msg, index) in messages" :key="index">
+        <template v-for="(msg) in messages" :key="msg.id">
           <div :class="['flex gap-3', msg.isUser ? 'justify-end' : '']">
             <Avatar v-if="!msg.isUser" class="h-8 w-8">
               <AvatarFallback>AI</AvatarFallback>
@@ -55,11 +56,11 @@ import { Mic, Activity } from "lucide-vue-next";
         </template>
 
         <!-- 实时转写 -->
-        <div v-if="transcript" class="flex justify-end">
+        <div class="flex justify-end">
           <Card class="p-4 max-w-[85%] bg-muted/50">
             <div class="flex items-center gap-2 text-muted-foreground">
               <Activity class="h-4 w-4 animate-pulse" />
-              <p>{{ transcript }}</p>
+              <p>{{ }}</p>
             </div>
           </Card>
         </div>
@@ -69,10 +70,9 @@ import { Mic, Activity } from "lucide-vue-next";
     <!-- 语音控制栏 -->
     <footer class="p-8 border-t dark:border-gray-700">
       <div class="max-w-3xl mx-auto flex justify-center">
-        <Button @click="toggleRecording" :disabled="!isSupported" :variant="isRecording ? 'destructive' : 'default'"
-          size="lg" class="rounded-full h-16 w-16 relative">
+        <Button size="lg" class="rounded-full h-16 w-16 relative">
           <Mic class="h-8 w-8" />
-          <span v-if="isSpeaking" class="absolute -top-2 -right-2">
+          <span class="absolute -top-2 -right-2">
             <Activity class="h-4 w-4 animate-pulse" />
           </span>
         </Button>
