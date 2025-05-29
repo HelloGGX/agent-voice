@@ -1,19 +1,25 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import tailwindcss from '@tailwindcss/vite'
-import path from 'node:path'
+import tailwindcss from "@tailwindcss/vite";
+import AutoImport from "unplugin-auto-import/vite";
+import path from "node:path";
 
 const host = process.env.TAURI_DEV_HOST;
+const pathSrc = path.resolve(__dirname, "src");
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
   plugins: [
     vue(),
-    tailwindcss()
+    tailwindcss(),
+    AutoImport({
+      imports: ["vue", "vue-router", "pinia"],
+      dts: path.resolve(pathSrc, "auto-imports.d.ts"),
+    }),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`

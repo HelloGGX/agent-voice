@@ -3,10 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Mic, Activity } from "lucide-vue-next";
-import { ref } from "vue";
 
 const messages = ref<{ id: string; text: string; isUser: boolean }[]>([]);
-
 </script>
 
 <template>
@@ -38,15 +36,17 @@ const messages = ref<{ id: string; text: string; isUser: boolean }[]>([]);
         </div>
 
         <!-- 对话记录 -->
-        <template v-for="(msg) in messages" :key="msg.id">
+        <template v-for="msg in messages" :key="msg.id">
           <div :class="['flex gap-3', msg.isUser ? 'justify-end' : '']">
             <Avatar v-if="!msg.isUser" class="h-8 w-8">
               <AvatarFallback>AI</AvatarFallback>
             </Avatar>
-            <Card :class="[
-              'p-4 max-w-[85%]',
-              msg.isUser ? 'bg-primary text-primary-foreground' : '',
-            ]">
+            <Card
+              :class="[
+                'p-4 max-w-[85%]',
+                msg.isUser ? 'bg-primary text-primary-foreground' : '',
+              ]"
+            >
               <p>{{ msg.text }}</p>
             </Card>
             <Avatar v-if="msg.isUser" class="h-8 w-8">
@@ -60,7 +60,7 @@ const messages = ref<{ id: string; text: string; isUser: boolean }[]>([]);
           <Card class="p-4 max-w-[85%] bg-muted/50">
             <div class="flex items-center gap-2 text-muted-foreground">
               <Activity class="h-4 w-4 animate-pulse" />
-              <p>{{ }}</p>
+              <p>{{}}</p>
             </div>
           </Card>
         </div>

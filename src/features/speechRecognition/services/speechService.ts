@@ -1,6 +1,7 @@
 export class SpeechService {
   private recognition: SpeechRecognition | null = null;
-  private listeners: Map<string, ((data?: Record<string, unknown>) => void)[]> = new Map();
+  private listeners: Map<string, ((data?: Record<string, unknown>) => void)[]> =
+    new Map();
 
   async initialize() {
     this.initializeSpeechRecognition();
@@ -51,14 +52,20 @@ export class SpeechService {
   }
 
   // 事件监听器管理
-  addEventListener(event: string, callback: (data?: Record<string, unknown>) => void): void {
+  addEventListener(
+    event: string,
+    callback: (data?: Record<string, unknown>) => void,
+  ): void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
     this.listeners.get(event)!.push(callback);
   }
 
-  removeEventListener(event: string, callback: (data?: Record<string, unknown>) => void): void {
+  removeEventListener(
+    event: string,
+    callback: (data?: Record<string, unknown>) => void,
+  ): void {
     const callbacks = this.listeners.get(event);
     if (callbacks) {
       const index = callbacks.indexOf(callback);
