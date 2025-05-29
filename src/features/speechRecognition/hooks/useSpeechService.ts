@@ -7,6 +7,39 @@ export function useSpeechService() {
     console.log("麦克风权限检查通过，创建语音服务...");
     speechService = new SpeechService();
     speechService.initialize();
+    setupSpeechEventListeners();
+  };
+
+  // 注册语音事件监听器
+  const setupSpeechEventListeners = () => {
+    if (!speechService) return;
+
+    // 语音识别开始
+    speechService.addEventListener("recognition-start", () => {
+      console.log("语音识别开始");
+    });
+
+    // 语音识别结果
+    speechService.addEventListener("recognition-result", (data: any) => {
+      if (data.final) {
+        console.log("语音识别最终结果:", data.final);
+      }
+    });
+
+    // 最终结果处理
+    speechService.addEventListener("final-result", handleFinalResult);
+
+    // 唤醒词检测
+    speechService.addEventListener(
+      "wake-word-detected",
+      handleWakeWordDetected,
+    );
+
+    // 语音识别结束
+    speechService.addEventListener("recognition-end", handleRecognitionEnd);
+
+    // 语音识别错误
+    speechService.addEventListener("recognition-error", handleRecognitionError);
   };
 
   // 生命周期钩子
@@ -17,4 +50,11 @@ export function useSpeechService() {
       console.error("组件挂载时初始化语音服务失败:", error);
     }
   });
+
+  function handleFinalResult() {}
+  function handleWakeWordDetected(data: any) {
+    console.log("唤醒词检测到:", data);
+  }
+  function handleRecognitionEnd() {}
+  function handleRecognitionError() {}
 }

@@ -4,7 +4,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Mic, Activity } from "lucide-vue-next";
 
+import { useSpeechService } from "@/features/speechRecognition";
+
 const messages = ref<{ id: string; text: string; isUser: boolean }[]>([]);
+
+// 使用语音服务
+useSpeechService();
 </script>
 
 <template>
