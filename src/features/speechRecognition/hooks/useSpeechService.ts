@@ -50,11 +50,33 @@ export function useSpeechService() {
       console.error("组件挂载时初始化语音服务失败:", error);
     }
   });
-
+ 
+  // 开始监听
+  function startListening() {
+    if (!speechService) {
+      console.error("语音服务未初始化");
+      return;
+    }
+    try {
+      speechService.startRecognition();
+    } catch (error: any) {
+      console.error("启动语音监听失败:", error);
+    }
+  }
+  // 停止监听
+  function stopListening() {
+    if (!speechService) return;
+    speechService.stopRecognition();
+  }
   function handleFinalResult() {}
   function handleWakeWordDetected(data: any) {
     console.log("唤醒词检测到:", data);
   }
   function handleRecognitionEnd() {}
   function handleRecognitionError() {}
+
+  return {
+    startListening,
+    stopListening,
+  };
 }

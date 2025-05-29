@@ -9,7 +9,8 @@ import { useSpeechService } from "@/features/speechRecognition";
 const messages = ref<{ id: string; text: string; isUser: boolean }[]>([]);
 
 // 使用语音服务
-useSpeechService();
+const { startListening } = useSpeechService();
+
 </script>
 
 <template>
@@ -75,7 +76,7 @@ useSpeechService();
     <!-- 语音控制栏 -->
     <footer class="p-8 border-t dark:border-gray-700">
       <div class="max-w-3xl mx-auto flex justify-center">
-        <Button size="lg" class="rounded-full h-16 w-16 relative">
+        <Button @click="startListening" size="lg" class="rounded-full h-16 w-16 relative">
           <Mic class="h-8 w-8" />
           <span class="absolute -top-2 -right-2">
             <Activity class="h-4 w-4 animate-pulse" />
