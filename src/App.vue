@@ -5,11 +5,40 @@ import { Card } from "@/components/ui/card";
 import { Mic, Activity } from "lucide-vue-next";
 
 import { useSpeechService } from "@/features/speechRecognition";
+import { useSSE } from "@/features/SSEConnection";
 
 const messages = ref<{ id: string; text: string; isUser: boolean }[]>([]);
-
+messages.value = [
+  {
+    id: "1",
+    text: "您好！我是智能语音助手，请点击下方麦克风开始对话",
+    isUser: false,
+  },
+  {
+    id: "1",
+    text: "今天杭州天气如何？",
+    isUser: true
+  },
+  {
+    id: "2",
+    text: "杭州今天多云转晴，气温18-25℃，东风2级，适合户外活动。",
+    isUser: false
+  },
+  {
+    id: "3",
+    text: "推荐一家西湖边的餐厅",
+    isUser: true
+  },
+  {
+    id: "4",
+    text: "推荐「楼外楼」，经典杭帮菜餐厅，位于孤山路30号，推荐东坡肉和西湖醋鱼。建议提前预约。",
+    isUser: false
+  }
+];
 // 使用语音服务
 const { startListening } = useSpeechService();
+// 使用SSE服务
+useSSE({ url: "http://localhost:3000/sse" });
 
 </script>
 
@@ -29,17 +58,6 @@ const { startListening } = useSpeechService();
     <!-- 对话记录区域 -->
     <main class="flex-1 overflow-y-auto p-4">
       <div class="max-w-3xl mx-auto space-y-6">
-        <!-- AI欢迎消息 -->
-        <div class="flex gap-3">
-          <Avatar class="h-8 w-8">
-            <AvatarFallback>AI</AvatarFallback>
-          </Avatar>
-          <Card class="p-4 max-w-[85%]">
-            <p class="text-primary">
-              您好！我是智能语音助手，请点击下方麦克风开始对话
-            </p>
-          </Card>
-        </div>
 
         <!-- 对话记录 -->
         <template v-for="msg in messages" :key="msg.id">
