@@ -7,6 +7,7 @@
     "setup": "rm -rf **/node_modules **/dist ./pnpm-lock.yaml && pnpm install",
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
+    "build:tauri": "tauri build",
     "preview": "vite preview",
     "tauri": "tauri",
     "lint": "eslint . --fix",
@@ -14,6 +15,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.7",
+    "@tanstack/vue-query": "^5.79.2",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@vueuse/core": "^11.3.0",
@@ -26,7 +28,8 @@
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.7",
     "vosk": "^0.3.39",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vue-sonner": "^2.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
