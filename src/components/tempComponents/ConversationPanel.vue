@@ -15,7 +15,6 @@ const props = withDefaults(
     // otherProp: 'default value',
   },
 );
-console.log('props.messages:', props.messages)
 const scrollContainer = ref<HTMLElement>();
 const isNearBottom = ref(true);
 const showScrollPrompt = ref(false);

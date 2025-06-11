@@ -6,7 +6,6 @@ const props = defineProps<{
   data: any[];
 }>();
 
-console.log("props.data", props.data);
 
 const multJourney = computed(() => props.data.length > 1)
 
