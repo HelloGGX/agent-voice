@@ -14,11 +14,13 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@statelyai/inspect": "^0.4.0",
     "@tailwindcss/vite": "^4.1.7",
     "@tanstack/vue-query": "^5.79.2",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@vueuse/core": "^11.3.0",
+    "@xstate/vue": "^4.0.4",
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -29,7 +31,8 @@
     "tailwindcss": "^4.1.7",
     "vosk": "^0.3.39",
     "vue": "^3.5.13",
-    "vue-sonner": "^2.0.0"
+    "vue-sonner": "^2.0.0",
+    "xstate": "^5.19.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",

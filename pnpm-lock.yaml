@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@statelyai/inspect':
+        specifier: ^0.4.0
+        version: 0.4.0(ws@8.18.2)(xstate@5.19.4)
       '@tailwindcss/vite':
         specifier: ^4.1.7
         version: 4.1.7(vite@6.3.5(@types/node@22.15.23)(jiti@2.4.2)(lightningcss@1.30.1))
@@ -23,6 +26,9 @@ importers:
       '@vueuse/core':
         specifier: ^11.3.0
         version: 11.3.0(vue@3.5.15(typescript@5.6.3))
+      '@xstate/vue':
+        specifier: ^4.0.4
+        version: 4.0.4(vue@3.5.15(typescript@5.6.3))(xstate@5.19.4)
       axios:
         specifier: ^1.7.7
         version: 1.9.0
@@ -56,6 +62,9 @@ importers:
       vue-sonner:
         specifier: ^2.0.0
         version: 2.0.0
+      xstate:
+        specifier: ^5.19.4
+        version: 5.19.4
     devDependencies:
       '@eslint/js':
         specifier: ^9.27.0
@@ -517,6 +526,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@statelyai/inspect@0.4.0':
+    resolution: {integrity: sha512-VxQldRlKYcu6rzLY83RSXVwMYexkH6hNx85B89YWYyXYWtNGaWHFCwV7a/Kz8FFPeUz8EKVAnyMOg2kNpn07wQ==}
+    peerDependencies:
+      xstate: ^5.5.1
+
   '@swc/helpers@0.5.17':
     resolution: {integrity: sha512-5IKx/Y13RsYd+sauPb2x+U/xZikHjolzfuDgTAl/Tdf3Q8rslRvC19NKDLgAJQ6wsqADk10ntlv08nPFw/gO/A==}
 
@@ -898,6 +912,15 @@ packages:
   '@vueuse/shared@12.8.2':
     resolution: {integrity: sha512-dznP38YzxZoNloI0qpEfpkms8knDtaoQ6Y/sfS0L7Yki4zh40LFHEhur0odJC6xTHG5dxWVPiUWBXn+wCG2s5w==}
 
+  '@xstate/vue@4.0.4':
+    resolution: {integrity: sha512-nX7eGsXb652ryZYjw7MwcJV2tudvq4pGWlqglU49K30+I/MG1Syvss5eiTD42i8qsEW5GFBYXPh4Tn/yBkA9Vw==}
+    peerDependencies:
+      vue: ^3.0.0
+      xstate: ^5.19.4
+    peerDependenciesMeta:
+      xstate:
+        optional: true
+
   accepts@1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
     engines: {node: '>= 0.6'}
@@ -1261,6 +1284,10 @@ packages:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
 
+  event-target-shim@6.0.2:
+    resolution: {integrity: sha512-8q3LsZjRezbFZ2PN+uP+Q7pnHUMmAOziU2vA2OwoFaKIXxlxl38IylhSSgUorWu/rf4er67w0ikBqjBFk/pomA==}
+    engines: {node: '>=10.13.0'}
+
   express@4.21.2:
     resolution: {integrity: sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==}
     engines: {node: '>= 0.10.0'}
@@ -1283,6 +1310,9 @@ packages:
 
   fast-levenshtein@2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
+
+  fast-safe-stringify@2.1.1:
+    resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
 
   fastq@1.19.1:
     resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
@@ -1477,6 +1507,11 @@ packages:
 
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  isomorphic-ws@5.0.0:
+    resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
+    peerDependencies:
+      ws: '*'
 
   jiti@2.4.2:
     resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
@@ -1735,6 +1770,9 @@ packages:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
 
+  partysocket@0.0.25:
+    resolution: {integrity: sha512-1oCGA65fydX/FgdnsiBh68buOvfxuteoZVSb3Paci2kRp/7lhF0HyA8EDb5X/O6FxId1e+usPTQNRuzFEvkJbQ==}
+
   path-browserify@1.0.1:
     resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
 
@@ -1878,6 +1916,10 @@ packages:
   safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
 
+  safe-stable-stringify@2.5.0:
+    resolution: {integrity: sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==}
+    engines: {node: '>=10'}
+
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
@@ -1952,6 +1994,10 @@ packages:
 
   strip-literal@3.0.0:
     resolution: {integrity: sha512-TcccoMhJOM3OebGhSBEmp3UZ2SfDMZUEBdRA/9ynfLi8yYajyWX3JiXArcJt4Umh4vISpspkQIY8ZZoCqjbviA==}
+
+  superjson@1.13.3:
+    resolution: {integrity: sha512-mJiVjfd2vokfDxsQPOwJ/PtanO87LhpYY88ubI5dUB1Ab58Txbyje3+jpm+/83R/fevaq/107NNhtYBLuoTrFg==}
+    engines: {node: '>=10'}
 
   superjson@2.2.2:
     resolution: {integrity: sha512-5JRxVqC8I8NuOUjzBbvVJAKNM8qoVuH0O77h4WInc/qC2q5IreqKxYwgkga3PfA22OayK2ikceb/B26dztPl+Q==}
@@ -2078,6 +2124,10 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
+  uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
+
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
@@ -2178,9 +2228,24 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
 
+  ws@8.18.2:
+    resolution: {integrity: sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
     engines: {node: '>=12'}
+
+  xstate@5.19.4:
+    resolution: {integrity: sha512-h1UMSYOB564NXqAI+VpXrxwaBdOJUh6LOStooQ+Rn/+gqJWtGBfjZn265BwFI8Mp4ZoOyoLDNf8X1yp3faBUZQ==}
 
   yallist@5.0.0:
     resolution: {integrity: sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==}
@@ -2464,6 +2529,18 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.41.1':
     optional: true
+
+  '@statelyai/inspect@0.4.0(ws@8.18.2)(xstate@5.19.4)':
+    dependencies:
+      fast-safe-stringify: 2.1.1
+      isomorphic-ws: 5.0.0(ws@8.18.2)
+      partysocket: 0.0.25
+      safe-stable-stringify: 2.5.0
+      superjson: 1.13.3
+      uuid: 9.0.1
+      xstate: 5.19.4
+    transitivePeerDependencies:
+      - ws
 
   '@swc/helpers@0.5.17':
     dependencies:
@@ -2887,6 +2964,12 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+  '@xstate/vue@4.0.4(vue@3.5.15(typescript@5.6.3))(xstate@5.19.4)':
+    dependencies:
+      vue: 3.5.15(typescript@5.6.3)
+    optionalDependencies:
+      xstate: 5.19.4
+
   accepts@1.3.8:
     dependencies:
       mime-types: 2.1.35
@@ -3268,6 +3351,8 @@ snapshots:
 
   etag@1.8.1: {}
 
+  event-target-shim@6.0.2: {}
+
   express@4.21.2:
     dependencies:
       accepts: 1.3.8
@@ -3321,6 +3406,8 @@ snapshots:
   fast-json-stable-stringify@2.1.0: {}
 
   fast-levenshtein@2.0.6: {}
+
+  fast-safe-stringify@2.1.1: {}
 
   fastq@1.19.1:
     dependencies:
@@ -3497,6 +3584,10 @@ snapshots:
   isarray@0.0.1: {}
 
   isexe@2.0.0: {}
+
+  isomorphic-ws@5.0.0(ws@8.18.2):
+    dependencies:
+      ws: 8.18.2
 
   jiti@2.4.2: {}
 
@@ -3706,6 +3797,10 @@ snapshots:
 
   parseurl@1.3.3: {}
 
+  partysocket@0.0.25:
+    dependencies:
+      event-target-shim: 6.0.2
+
   path-browserify@1.0.1: {}
 
   path-exists@4.0.0: {}
@@ -3873,6 +3968,8 @@ snapshots:
 
   safe-buffer@5.2.1: {}
 
+  safe-stable-stringify@2.5.0: {}
+
   safer-buffer@2.1.2: {}
 
   scule@1.3.0: {}
@@ -3965,6 +4062,10 @@ snapshots:
   strip-literal@3.0.0:
     dependencies:
       js-tokens: 9.0.1
+
+  superjson@1.13.3:
+    dependencies:
+      copy-anything: 3.0.5
 
   superjson@2.2.2:
     dependencies:
@@ -4094,6 +4195,8 @@ snapshots:
 
   utils-merge@1.0.1: {}
 
+  uuid@9.0.1: {}
+
   vary@1.1.2: {}
 
   vite@6.3.5(@types/node@22.15.23)(jiti@2.4.2)(lightningcss@1.30.1):
@@ -4175,7 +4278,11 @@ snapshots:
 
   word-wrap@1.2.5: {}
 
+  ws@8.18.2: {}
+
   xml-name-validator@4.0.0: {}
+
+  xstate@5.19.4: {}
 
   yallist@5.0.0: {}
 
