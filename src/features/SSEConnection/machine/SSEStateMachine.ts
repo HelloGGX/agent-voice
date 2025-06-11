@@ -17,7 +17,7 @@ export type SSEStateMachineProps = StateMachine<
   never,
   never,
   never,
-  "connecting" | "open" | "closed" | "idle" | "retry",
+  "connecting" | "open" | "closed" | "idle" | "retry" | "delaying",
   string,
   NonReducibleUnknown,
   NonReducibleUnknown,
@@ -26,7 +26,7 @@ export type SSEStateMachineProps = StateMachine<
   {}
 >;
 
-export type SSEState = "connecting" | "open" | "closed" | "idle" | "retry";
+export type SSEState = "connecting" | "open" | "closed" | "idle" | "retry" | "delaying";
 
 export type SSEEvent =
   | { type: "connect" }
@@ -39,16 +39,18 @@ export type SSEEvent =
   | { type: "idle" }
   | { type: "retry" }
   | { type: "retrying" }
-  | { type: "reset" };
+  | { type: "reset" }
+  | { type: "delaying" };
 
 export type SSEContext = {
   retryCount: number;
   retryDelay: number;
-  retryMaxCount: number;
   retryBackoffFactor: number;
+  retryMaxCount: number;
   sseClient: SSEClient | null;
   messages: any[];
 };
+export const client = new SSEClient();
 
 export const SSEStateMachine = setup({
   types: {
@@ -67,15 +69,6 @@ export const SSEStateMachine = setup({
     resetRetryCount: assign({
       retryCount: 0,
     }),
-    // 重试连接
-    handleRetry: ({ context, self }) => {
-      console.log("handleRetry, retryCount:", context.retryCount);
-      const delay = context.retryDelay * Math.pow(context.retryBackoffFactor, context.retryCount);
-      setTimeout(() => {
-        // 触发重试事件
-        self.send({ type: "connecting" });
-      }, delay);
-    },
     // 重置连接
     resetConnection: assign(({ context }) => {
       if (context.sseClient) {
@@ -95,33 +88,42 @@ export const SSEStateMachine = setup({
         return { ...context };
       }
     }),
-    handleMessage: ({ context, event }) => {
+    handleMessage: assign(({ context, event }) => {
       console.log("Received message:", event);
       const newMessage = event;
       return {
         messages: [...(context.messages || []), newMessage],
       };
-    },
+    }),
   },
   actors: {
     sseClientActor: fromPromise(async () => {
-    const client = new SSEClient();
-    try {
-      const res = await client.connect(); // 等待 connect 完成
-      console.log("Connection established:", res);
-      return res; // ✅ 正确 resolve 并返回结果
-    } catch (err) {
-      console.error("连接失败（Actor内部）:", err); // ✅ 添加日志
-      throw err; // ✅ 正确地抛出错误，触发 onError
-    }
-  }),
+      try {
+        const res = await client.connect(); // 等待 connect 完成
+        return res; // ✅ 正确 resolve 并返回结果
+      } catch (err) {
+        console.error("连接失败（Actor内部）:", err);
+        throw err; // ✅ 正确地抛出错误，触发 onError
+      }
+    }),
+    retryDelayActor: fromPromise(({ input }: { input: SSEContext }) => {
+      return new Promise((resolve) => {
+        // const delay = 3000;
+        const delay = Math.min(
+          input.retryDelay * Math.pow(input.retryBackoffFactor, input.retryCount),
+          30000,
+        );
+        console.log("Calculated delay:", delay);
+        setTimeout(resolve, delay);
+      });
+    }),
   },
 }).createMachine({
   context: {
     retryCount: 0,
     retryDelay: 1000,
     retryMaxCount: 3,
-    retryBackoffFactor: 2,
+    retryBackoffFactor: 1.2,
     sseClient: null,
     messages: [],
   },
@@ -138,6 +140,7 @@ export const SSEStateMachine = setup({
     },
     connecting: {
       invoke: {
+        id: "sseClientActor",
         src: "sseClientActor",
         onDone: {
           target: "open",
@@ -157,6 +160,7 @@ export const SSEStateMachine = setup({
       description: "The SSE connection is successfully established and open.",
     },
     retry: {
+      entry: "handleRetryCount",
       on: {
         retrying: [
           {
@@ -166,13 +170,22 @@ export const SSEStateMachine = setup({
             },
           },
           {
-            target: "connecting",
-            actions: "handleRetry",
+            target: "delaying",
           },
         ],
       },
-      entry: "handleRetryCount",
       description: "Retrying to connect after a failed attempt.",
+    },
+    delaying: {
+      invoke: {
+        id: "retryDelayActor",
+        src: "retryDelayActor",
+        input: ({ context }) => ({ ...context }),
+        onDone: {
+          target: "connecting",
+        },
+      },
+      description: "等待重试连接的时间。",
     },
     closed: {
       on: {

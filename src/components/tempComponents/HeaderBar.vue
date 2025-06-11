@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { SSEState } from "@/features/SSEConnection";
 import { defineProps } from "vue";
 
 const props = defineProps<{
-  connectState: "idle" | "connecting" | "open" | "closed" | "unknown";
+  connectState: SSEState;
 }>();
 
 const connectStateText = computed(() => {
@@ -11,6 +12,8 @@ const connectStateText = computed(() => {
       return "初始化";
     case "connecting":
       return "连接中...";
+    case "delaying":
+      return "重连中...";
     case "open":
       return "在线";
     case "closed":
@@ -25,6 +28,8 @@ const statusDotClass = computed(() => {
     case "idle":
       return "bg-gray-400";
     case "connecting":
+      return "bg-yellow-500 animate-pulse";
+    case "delaying":
       return "bg-yellow-500 animate-pulse";
     case "open":
       return "bg-green-500";

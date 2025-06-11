@@ -4,15 +4,22 @@ import { Card } from "@/components/ui/card";
 import { debounce } from "@/utils/optimization";
 import { Activity } from "lucide-vue-next";
 import JourneyCard from "./JourneyCard.vue";
+import { Message } from "@/types";
 const props = withDefaults(
   defineProps<{
-    messages: Array<any>;
+    messages: Array<Message>;
     // 假设还有其他属性，例如：
     // otherProp?: string;
   }>(),
   {
     messages: () => [],
     // otherProp: 'default value',
+  },
+);
+watch(
+  () => props.messages,
+  (newVal) => {
+    console.log("newVal", newVal);
   },
 );
 const scrollContainer = ref<HTMLElement>();
@@ -30,8 +37,7 @@ const handleScroll = debounce(() => {
   isNearBottom.value = scrollTop + clientHeight >= scrollHeight - threshold;
 
   // 当有新消息且用户离开底部时显示提示
-  showScrollPrompt.value =
-    !isNearBottom.value && props.messages.length > prevMessagesLength;
+  showScrollPrompt.value = !isNearBottom.value && props.messages.length > prevMessagesLength;
 }, 150);
 
 // 滚动到底部方法
@@ -71,7 +77,7 @@ onMounted(() => {
     nextTick(() => {
       scrollToBottom();
       // 初始化消息长度记录
-      prevMessagesLength = props.messages.length; 
+      prevMessagesLength = props.messages.length;
     });
   }
 });
@@ -85,23 +91,26 @@ onUnmounted(() => {
 
 <template>
   <main ref="scrollContainer" class="flex-1 overflow-y-auto p-4 relative">
-    <div class=" mx-auto space-y-6">
+    <div class="mx-auto space-y-6">
       <!-- 对话记录 -->
-      <template v-for="msg in messages" :key="msg.id">
-        <div :class="['flex gap-3', msg.isUser ? 'justify-end' : '']">
-          <Avatar v-if="!msg.isUser" class="h-12 w-12">
+      <template v-for="(msg, index) in messages" :key="index">
+        <div :class="['flex gap-3', msg.data.event === 'human_message' ? 'justify-end' : '']">
+          <Avatar v-if="msg.data.event === 'ai_message'" class="h-12 w-12">
             <AvatarFallback>助手</AvatarFallback>
           </Avatar>
           <Card
             :class="[
               'p-4 max-w-[85%]',
-              msg.isUser ? 'bg-primary text-primary-foreground' : '',
+              msg.data.event === 'human_message' ? 'bg-primary text-primary-foreground' : '',
             ]"
           >
-          <JourneyCard v-if="msg.event === 'journey'" :data="msg.data" />
-          <p v-else>{{ msg.text }}</p>
-        </Card>
-          <Avatar v-if="msg.isUser" class="h-12 w-12">
+            <JourneyCard
+              v-if="msg.data.event === 'journey'"
+              :data="Array.isArray(msg.data?.data) ? msg.data.data : [msg.data.data]"
+            />
+            <p v-else>{{ msg.data.data }}</p>
+          </Card>
+          <Avatar v-if="msg.data.event === 'human_message'" class="h-12 w-12">
             <AvatarFallback>您</AvatarFallback>
           </Avatar>
         </div>

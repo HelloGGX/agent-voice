@@ -8,7 +8,7 @@ import { useMachine } from "@xstate/vue";
 import { useSpeechService } from "@/features/speechRecognition";
 import { createBrowserInspector } from "@statelyai/inspect";
 import "vue-sonner/style.css";
-import { SSEStateMachine } from "./features/SSEConnection";
+import { client, SSEState, SSEStateMachine } from "./features/SSEConnection";
 
 const { inspect } = createBrowserInspector({ autoStart: false });
 const { snapshot: SSESnapshot, send } = useMachine(SSEStateMachine, { inspect });
@@ -22,6 +22,9 @@ watch(
     immediate: true,
   },
 );
+client.on("message", (data) => {
+  send({ type: "message", data });
+});
 // 使用语音服务
 const { startListening } = useSpeechService();
 // 使用SSE服务
@@ -30,45 +33,18 @@ const { startListening } = useSpeechService();
 /**
  * SSE服务状态信息
  */
-const connectState = computed(() => {
+const connectState = computed<SSEState>(() => {
   const snapshotValue = SSESnapshot.value;
   if (snapshotValue.matches("idle")) return "idle";
   if (snapshotValue.matches("connecting")) return "connecting";
+  if (snapshotValue.matches("delaying")) return "delaying";
   if (snapshotValue.matches("open")) return "open";
   if (snapshotValue.matches("closed")) return "closed";
-  return "unknown";
+  return "closed";
 });
 
 const messages = computed(() => {
-  return (
-    SSESnapshot.value?.context?.messages || [
-      {
-        id: "1",
-        text: "您好！我是智能语音助手，请点击下方麦克风开始对话",
-        isUser: false,
-      },
-      {
-        id: "1",
-        text: "今天杭州天气如何？",
-        isUser: true,
-      },
-      {
-        id: "2",
-        text: "杭州今天多云转晴，气温18-25℃，东风2级，适合户外活动。",
-        isUser: false,
-      },
-      {
-        id: "3",
-        text: "推荐一家西湖边的餐厅",
-        isUser: true,
-      },
-      {
-        id: "4",
-        text: "推荐「楼外楼」，经典杭帮菜餐厅，位于孤山路30号，推荐东坡肉和西湖醋鱼。建议提前预约。",
-        isUser: false,
-      },
-    ]
-  );
+  return SSESnapshot.value?.context?.messages || [];
 });
 
 onMounted(() => {
@@ -81,7 +57,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-screen flex flex-col bg-background dark:bg-gray-900">
+  <div class="w-full max-w-full h-screen flex flex-col bg-background dark:bg-gray-900">
     <!-- 头部状态栏 -->
     <HeaderBar :connect-state="connectState" />
 
