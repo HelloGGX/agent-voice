@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { SSEState } from "@/features/SSEConnection";
-import { defineProps } from "vue";
+import { SSEState } from '@/features/SSEConnection';
+import { defineProps } from 'vue';
 
 const props = defineProps<{
   connectState: SSEState;
@@ -8,35 +8,35 @@ const props = defineProps<{
 
 const connectStateText = computed(() => {
   switch (props.connectState) {
-    case "idle":
-      return "初始化";
-    case "connecting":
-      return "连接中...";
-    case "delaying":
-      return "重连中...";
-    case "open":
-      return "在线";
-    case "closed":
-      return "离线";
+    case 'idle':
+      return '初始化';
+    case 'connecting':
+      return '连接中...';
+    case 'delaying':
+      return '重连中...';
+    case 'open':
+      return '在线';
+    case 'closed':
+      return '离线';
     default:
-      return "未知状态";
+      return '未知状态';
   }
 });
 
 const statusDotClass = computed(() => {
   switch (props.connectState) {
-    case "idle":
-      return "bg-gray-400";
-    case "connecting":
-      return "bg-yellow-500 animate-pulse";
-    case "delaying":
-      return "bg-yellow-500 animate-pulse";
-    case "open":
-      return "bg-green-500";
-    case "closed":
-      return "bg-red-500";
+    case 'idle':
+      return 'bg-gray-400';
+    case 'connecting':
+      return 'bg-yellow-500 animate-pulse';
+    case 'delaying':
+      return 'bg-yellow-500 animate-pulse';
+    case 'open':
+      return 'bg-green-500';
+    case 'closed':
+      return 'bg-red-500';
     default:
-      return "bg-gray-400";
+      return 'bg-gray-400';
   }
 });
 </script>

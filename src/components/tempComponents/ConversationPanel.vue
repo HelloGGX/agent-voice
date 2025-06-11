@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Card } from "@/components/ui/card";
-import { debounce } from "@/utils/optimization";
-import { Activity } from "lucide-vue-next";
-import JourneyCard from "./JourneyCard.vue";
-import { Message } from "@/types";
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Card } from '@/components/ui/card';
+import { debounce } from '@/utils/optimization';
+import { Activity } from 'lucide-vue-next';
+import JourneyCard from './JourneyCard.vue';
+import { Message } from '@/types';
 const props = withDefaults(
   defineProps<{
     messages: Array<Message>;
@@ -19,7 +19,7 @@ const props = withDefaults(
 watch(
   () => props.messages,
   (newVal) => {
-    console.log("newVal", newVal);
+    console.log('newVal', newVal);
   },
 );
 const scrollContainer = ref<HTMLElement>();
@@ -46,7 +46,7 @@ const scrollToBottom = () => {
     if (scrollContainer.value) {
       scrollContainer.value.scrollTo({
         top: scrollContainer.value.scrollHeight,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
       showScrollPrompt.value = false;
       prevMessagesLength = props.messages.length;
@@ -65,13 +65,13 @@ watch(
     }
     prevMessagesLength = newVal.length;
   },
-  { deep: true, flush: "post" },
+  { deep: true, flush: 'post' },
 );
 
 // 初始化滚动监听
 onMounted(() => {
   if (scrollContainer.value) {
-    scrollContainer.value.addEventListener("scroll", handleScroll);
+    scrollContainer.value.addEventListener('scroll', handleScroll);
 
     // 新增初始滚动逻辑
     nextTick(() => {
@@ -84,7 +84,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (scrollContainer.value) {
-    scrollContainer.value.removeEventListener("scroll", handleScroll);
+    scrollContainer.value.removeEventListener('scroll', handleScroll);
   }
 });
 </script>

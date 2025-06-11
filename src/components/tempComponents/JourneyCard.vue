@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Clock, Plane, Globe } from "lucide-vue-next";
+import { Clock, Plane, Globe } from 'lucide-vue-next';
 
 /**
  * 行程数据结构
@@ -32,17 +32,17 @@ const multJourney = computed(() => data.value.length > 1);
 /**
  * 时间字符串转 00:00 格式
  */
-const formatTime = (timeStr: string) => timeStr.replace(/(\d{2})(\d{2})/, "$1:$2");
+const formatTime = (timeStr: string) => timeStr.replace(/(\d{2})(\d{2})/, '$1:$2');
 /**
  * 日期字符串转 2024-01-01 格式
  */
-const formatDate = (dateStr: string) => dateStr.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+const formatDate = (dateStr: string) => dateStr.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
 
 /**
  * 计算转机时间
  */
 const calculateTransferTime = (journeys: Journey[], index: number) => {
-  if (index === 0) return "";
+  if (index === 0) return '';
   const prevArrival = journeys[index - 1].arrTime;
   const currentDeparture = journeys[index].depTime;
   return `转机 ${timeDiff(prevArrival, currentDeparture)}`;
@@ -72,7 +72,7 @@ const calculateDuration = (dep: string, arr: string) => {
 const calculateTotalDuration = (journeys: Journey[]) => {
   const firstDep = journeys[0].depTime;
   const lastArr = journeys[journeys.length - 1].arrTime;
-  return `${timeDiff(firstDep, lastArr)} ${journeys.length > 1 ? "(含转机)" : ""}`;
+  return `${timeDiff(firstDep, lastArr)} ${journeys.length > 1 ? '(含转机)' : ''}`;
 };
 </script>
 
@@ -131,7 +131,7 @@ const calculateTotalDuration = (journeys: Journey[]) => {
               }"
               :aria-label="journey.checkIn ? '已值机' : '未值机'"
             >
-              {{ journey.checkIn ? "已值机 ✓" : "未值机" }}
+              {{ journey.checkIn ? '已值机 ✓' : '未值机' }}
             </div>
           </header>
 
@@ -186,7 +186,7 @@ const calculateTotalDuration = (journeys: Journey[]) => {
             </div>
             <div class="InfoItem">
               <span class="text-gray-700">座位：</span>
-              <span class="font-medium">{{ journey.seatNo || "未选座" }}</span>
+              <span class="font-medium">{{ journey.seatNo || '未选座' }}</span>
             </div>
             <div class="InfoItem">
               <span class="text-gray-700">飞行时长：</span>

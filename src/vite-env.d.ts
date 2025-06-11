@@ -8,12 +8,8 @@ interface SpeechRecognition extends EventTarget {
   start(): void;
   stop(): void;
   onstart: ((this: SpeechRecognition, ev: Event) => any) | null;
-  onresult:
-    | ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any)
-    | null;
-  onerror:
-    | ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => any)
-    | null;
+  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
+  onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => any) | null;
   onend: ((this: SpeechRecognition, ev: Event) => any) | null;
 }
 
@@ -60,8 +56,8 @@ interface Window {
   webkitSpeechRecognition: typeof webkitSpeechRecognition;
 }
 
-declare module "*.vue" {
-  import type { DefineComponent } from "vue";
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue';
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }

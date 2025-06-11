@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { Button } from "@/components/ui/button";
-import { Mic, Activity } from "lucide-vue-next";
-import ConversationPanel from "@/components/tempComponents/ConversationPanel.vue";
-import HeaderBar from "@/components/tempComponents/HeaderBar.vue";
-import { Toaster } from "@/components/ui/sonner";
-import { useMachine } from "@xstate/vue";
-import { useSpeechService } from "@/features/speechRecognition";
-import { createBrowserInspector } from "@statelyai/inspect";
-import "vue-sonner/style.css";
-import { client, SSEState, SSEStateMachine } from "./features/SSEConnection";
+import { Button } from '@/components/ui/button';
+import { Mic, Activity } from 'lucide-vue-next';
+import ConversationPanel from '@/components/tempComponents/ConversationPanel.vue';
+import HeaderBar from '@/components/tempComponents/HeaderBar.vue';
+import { Toaster } from '@/components/ui/sonner';
+import { useMachine } from '@xstate/vue';
+import { useSpeechService } from '@/features/speechRecognition';
+import { createBrowserInspector } from '@statelyai/inspect';
+import 'vue-sonner/style.css';
+import { client, SSEState, SSEStateMachine } from './features/SSEConnection';
 
 const { inspect } = createBrowserInspector({ autoStart: false });
 const { snapshot: SSESnapshot, send } = useMachine(SSEStateMachine, { inspect });
@@ -16,14 +16,14 @@ const { snapshot: SSESnapshot, send } = useMachine(SSEStateMachine, { inspect })
 watch(
   () => SSESnapshot.value,
   (snapshot) => {
-    console.log("watchSSESnapshot", snapshot.value, typeof snapshot.value);
+    console.log('watchSSESnapshot', snapshot.value, typeof snapshot.value);
   },
   {
     immediate: true,
   },
 );
-client.on("message", (data) => {
-  send({ type: "message", data });
+client.on('message', (data) => {
+  send({ type: 'message', data });
 });
 // 使用语音服务
 const { startListening } = useSpeechService();
@@ -35,12 +35,12 @@ const { startListening } = useSpeechService();
  */
 const connectState = computed<SSEState>(() => {
   const snapshotValue = SSESnapshot.value;
-  if (snapshotValue.matches("idle")) return "idle";
-  if (snapshotValue.matches("connecting")) return "connecting";
-  if (snapshotValue.matches("delaying")) return "delaying";
-  if (snapshotValue.matches("open")) return "open";
-  if (snapshotValue.matches("closed")) return "closed";
-  return "closed";
+  if (snapshotValue.matches('idle')) return 'idle';
+  if (snapshotValue.matches('connecting')) return 'connecting';
+  if (snapshotValue.matches('delaying')) return 'delaying';
+  if (snapshotValue.matches('open')) return 'open';
+  if (snapshotValue.matches('closed')) return 'closed';
+  return 'closed';
 });
 
 const messages = computed(() => {
@@ -52,7 +52,7 @@ onMounted(() => {
   //   description: "test toast",
   // });
   // SSEactorRef.start();
-  send({ type: "connect" });
+  send({ type: 'connect' });
 });
 </script>
 

@@ -6,8 +6,8 @@ import {
   NonReducibleUnknown,
   setup,
   StateMachine,
-} from "xstate";
-import { SSEClient } from "../services";
+} from 'xstate';
+import { SSEClient } from '../services';
 
 export type SSEStateMachineProps = StateMachine<
   SSEContext,
@@ -17,7 +17,7 @@ export type SSEStateMachineProps = StateMachine<
   never,
   never,
   never,
-  "connecting" | "open" | "closed" | "idle" | "retry" | "delaying",
+  'connecting' | 'open' | 'closed' | 'idle' | 'retry' | 'delaying',
   string,
   NonReducibleUnknown,
   NonReducibleUnknown,
@@ -26,21 +26,21 @@ export type SSEStateMachineProps = StateMachine<
   {}
 >;
 
-export type SSEState = "connecting" | "open" | "closed" | "idle" | "retry" | "delaying";
+export type SSEState = 'connecting' | 'open' | 'closed' | 'idle' | 'retry' | 'delaying';
 
 export type SSEEvent =
-  | { type: "connect" }
-  | { type: "connecting" }
-  | { type: "success" }
-  | { type: "failure" }
-  | { type: "open" }
-  | { type: "message"; data: any }
-  | { type: "closed" }
-  | { type: "idle" }
-  | { type: "retry" }
-  | { type: "retrying" }
-  | { type: "reset" }
-  | { type: "delaying" };
+  | { type: 'connect' }
+  | { type: 'connecting' }
+  | { type: 'success' }
+  | { type: 'failure' }
+  | { type: 'open' }
+  | { type: 'message'; data: any }
+  | { type: 'closed' }
+  | { type: 'idle' }
+  | { type: 'retry' }
+  | { type: 'retrying' }
+  | { type: 'reset' }
+  | { type: 'delaying' };
 
 export type SSEContext = {
   retryCount: number;
@@ -61,7 +61,7 @@ export const SSEStateMachine = setup({
     // 检查是否超过最大重试次数
     hasExceededMaxRetries: ({ context }) => {
       // Add your guard condition here
-      console.log("hasExceededMaxRetries", context.retryCount > context.retryMaxCount);
+      console.log('hasExceededMaxRetries', context.retryCount > context.retryMaxCount);
       return context.retryCount > context.retryMaxCount;
     },
   },
@@ -78,18 +78,18 @@ export const SSEStateMachine = setup({
     }),
     // 管理重试次数
     handleRetryCount: assign(({ context, self }) => {
-      console.log("handleRetryCount:", context.retryCount, context.retryMaxCount);
+      console.log('handleRetryCount:', context.retryCount, context.retryMaxCount);
       if (context.retryCount > context.retryMaxCount) {
-        self.send({ type: "closed" });
+        self.send({ type: 'closed' });
         return { ...context };
       } else {
         context.retryCount += 1;
-        self.send({ type: "retrying" });
+        self.send({ type: 'retrying' });
         return { ...context };
       }
     }),
     handleMessage: assign(({ context, event }) => {
-      console.log("Received message:", event);
+      console.log('Received message:', event);
       const newMessage = event;
       return {
         messages: [...(context.messages || []), newMessage],
@@ -102,7 +102,7 @@ export const SSEStateMachine = setup({
         const res = await client.connect(); // 等待 connect 完成
         return res; // ✅ 正确 resolve 并返回结果
       } catch (err) {
-        console.error("连接失败（Actor内部）:", err);
+        console.error('连接失败（Actor内部）:', err);
         throw err; // ✅ 正确地抛出错误，触发 onError
       }
     }),
@@ -113,7 +113,7 @@ export const SSEStateMachine = setup({
           input.retryDelay * Math.pow(input.retryBackoffFactor, input.retryCount),
           30000,
         );
-        console.log("Calculated delay:", delay);
+        console.log('Calculated delay:', delay);
         setTimeout(resolve, delay);
       });
     }),
@@ -127,74 +127,74 @@ export const SSEStateMachine = setup({
     sseClient: null,
     messages: [],
   },
-  id: "sseConnection",
-  initial: "idle",
+  id: 'sseConnection',
+  initial: 'idle',
   states: {
     idle: {
       on: {
         connect: {
-          target: "connecting",
+          target: 'connecting',
         },
       },
-      description: "The initial state where the SSE connection is not yet started.",
+      description: 'The initial state where the SSE connection is not yet started.',
     },
     connecting: {
       invoke: {
-        id: "sseClientActor",
-        src: "sseClientActor",
+        id: 'sseClientActor',
+        src: 'sseClientActor',
         onDone: {
-          target: "open",
+          target: 'open',
         },
         onError: {
-          target: "retry",
+          target: 'retry',
         },
       },
-      description: "Attempting to establish an SSE connection.",
+      description: 'Attempting to establish an SSE connection.',
     },
     open: {
       on: {
         message: {
-          actions: "handleMessage",
+          actions: 'handleMessage',
         },
       },
-      description: "The SSE connection is successfully established and open.",
+      description: 'The SSE connection is successfully established and open.',
     },
     retry: {
-      entry: "handleRetryCount",
+      entry: 'handleRetryCount',
       on: {
         retrying: [
           {
-            target: "closed",
+            target: 'closed',
             guard: {
-              type: "hasExceededMaxRetries",
+              type: 'hasExceededMaxRetries',
             },
           },
           {
-            target: "delaying",
+            target: 'delaying',
           },
         ],
       },
-      description: "Retrying to connect after a failed attempt.",
+      description: 'Retrying to connect after a failed attempt.',
     },
     delaying: {
       invoke: {
-        id: "retryDelayActor",
-        src: "retryDelayActor",
+        id: 'retryDelayActor',
+        src: 'retryDelayActor',
         input: ({ context }) => ({ ...context }),
         onDone: {
-          target: "connecting",
+          target: 'connecting',
         },
       },
-      description: "等待重试连接的时间。",
+      description: '等待重试连接的时间。',
     },
     closed: {
       on: {
         reset: {
-          target: "idle",
-          actions: "resetConnection",
+          target: 'idle',
+          actions: 'resetConnection',
         },
       },
-      description: "The SSE connection has been closed.",
+      description: 'The SSE connection has been closed.',
     },
   },
 });

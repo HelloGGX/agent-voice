@@ -1,4 +1,4 @@
-export type SpeechEventType = "journey" | "human_message" | "ai_message";
+export type SpeechEventType = 'journey' | 'human_message' | 'ai_message';
 
 export interface Message {
   type: string;

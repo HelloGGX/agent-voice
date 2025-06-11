@@ -1,6 +1,3 @@
-import { ActorRef, AnyActorRef, MachineSnapshot, StateValue } from "xstate";
-import type { SSEContext, SSEEvent } from "../machine";
-
 /**
  * SSE事件数据结构定义
  * @template T 事件数据的泛型类型（默认为any）
@@ -17,7 +14,7 @@ export type SSEEventData<T = any> = {
  */
 export type SSEClientOptions = {
   url?: string;
-  method?: "GET" | "POST"; // 新增方法配置
+  method?: 'GET' | 'POST'; // 新增方法配置
   body?: BodyInit; // POST 请求体
   withCredentials?: boolean;
   headers?: Record<string, string>;
@@ -52,31 +49,28 @@ export class SSEClient {
       this.abortController = new AbortController();
 
       try {
-        console.log("连接中...");
-        const response = await fetch(this.options?.url || "/api/v1/sse", {
-          method: this.options?.method || "POST",
+        const response = await fetch(this.options?.url || '/api/v1/sse', {
+          method: this.options?.method || 'POST',
           headers: {
-            "Content-Type": "application/json",
-            Accept: "text/event-stream",
+            'Content-Type': 'application/json',
+            Accept: 'text/event-stream',
             ...this.options?.headers,
           },
           body: this.options?.body,
           signal: this.abortController.signal,
-          credentials: this.options?.withCredentials ? "include" : "same-origin",
+          credentials: this.options?.withCredentials ? 'include' : 'same-origin',
         });
 
         if (!response.ok) {
           reject(new Error(`SSE连接失败: ${response.status}`));
-          // this.handleEvent("error", new Error(`SSE连接失败: ${response.status}`));
-          // return;
         }
 
-        console.log("SSE服务已连接");
+        console.log('SSE服务已连接');
         resolve({ success: true });
         const reader = response.body?.getReader();
         if (!reader) {
-          reject(new Error("无法读取事件流"));
-          this.handleEvent("error", new Error("无法读取事件流"));
+          reject(new Error('无法读取事件流'));
+          this.handleEvent('error', new Error('无法读取事件流'));
           return;
         }
 
@@ -85,18 +79,18 @@ export class SSEClient {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const eventChunks = this.decoder.decode(value).split("\n\n").filter(Boolean);
+          const eventChunks = this.decoder.decode(value).split('\n\n').filter(Boolean);
 
           eventChunks.forEach((chunk) => {
             const parsedEvent = this.parseSSEEvent(chunk);
             if (parsedEvent) {
-              this.handleEvent("message", parsedEvent.data);
+              this.handleEvent('message', parsedEvent.data);
             }
           });
         }
       } catch (error) {
-        this.handleEvent("error", error);
-        this.handleEvent("close", null);
+        this.handleEvent('error', error);
+        this.handleEvent('close', null);
         reject(error);
       }
     });
@@ -106,31 +100,31 @@ export class SSEClient {
    * SSE 事件解析器
    */
   private parseSSEEvent(raw: string): SSEEventData | null {
-    const lines = raw.split("\n");
+    const lines = raw.split('\n');
     const result: SSEEventData = {
       data: null,
       event: undefined,
     };
 
     lines.forEach((line) => {
-      const colonIndex = line.indexOf(":");
+      const colonIndex = line.indexOf(':');
       if (colonIndex <= 0) return;
 
       const field = line.slice(0, colonIndex).trim();
       const value = line.slice(colonIndex + 1).trim();
 
       switch (field) {
-        case "event":
+        case 'event':
           result.event = value;
           break;
-        case "data":
+        case 'data':
           try {
             result.data = JSON.parse(value);
           } catch {
             result.data = value;
           }
           break;
-        case "id":
+        case 'id':
           result.id = value;
           break;
       }
@@ -176,7 +170,7 @@ export class SSEClient {
   close() {
     this.abortController?.abort();
     this.abortController = null;
-    this.handleEvent("close", null);
+    this.handleEvent('close', null);
     this.eventHandlers.clear();
   }
 
