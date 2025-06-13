@@ -4,10 +4,10 @@ import { Card } from '@/components/ui/card';
 import { debounce } from '@/utils/optimization';
 import { Activity } from 'lucide-vue-next';
 import JourneyCard from './JourneyCard.vue';
-import { Message } from '@/types';
+import { EventData } from '@/types';
 const props = withDefaults(
   defineProps<{
-    messages: Array<Message>;
+    messages: Array<EventData>;
     // 假设还有其他属性，例如：
     // otherProp?: string;
   }>(),
@@ -93,24 +93,24 @@ onUnmounted(() => {
   <main ref="scrollContainer" class="flex-1 overflow-y-auto p-4 relative">
     <div class="mx-auto space-y-6">
       <!-- 对话记录 -->
-      <template v-for="(msg, index) in messages" :key="index">
-        <div :class="['flex gap-3', msg.data.event === 'human_message' ? 'justify-end' : '']">
-          <Avatar v-if="msg.data.event === 'ai_message'" class="h-12 w-12">
+      <template v-for="(msg, _index) in messages" :key="'message' + _index">
+        <div :class="['flex gap-3', msg.event === 'human_message' ? 'justify-end' : '']">
+          <Avatar v-if="msg.event === 'ai_message'" class="h-12 w-12">
             <AvatarFallback>助手</AvatarFallback>
           </Avatar>
           <Card
             :class="[
               'p-4 max-w-[85%]',
-              msg.data.event === 'human_message' ? 'bg-primary text-primary-foreground' : '',
+              msg.event === 'human_message' ? 'bg-primary text-primary-foreground' : '',
             ]"
           >
             <JourneyCard
-              v-if="msg.data.event === 'journey'"
-              :data="Array.isArray(msg.data?.data) ? msg.data.data : [msg.data.data]"
+              v-if="msg.event === 'journey'"
+              :data="Array.isArray(msg.data?.content) ? msg.data.content : [msg.data.content]"
             />
-            <p v-else>{{ msg.data.data }}</p>
+            <p v-else>{{ msg.data.content }}</p>
           </Card>
-          <Avatar v-if="msg.data.event === 'human_message'" class="h-12 w-12">
+          <Avatar v-if="msg.event === 'human_message'" class="h-12 w-12">
             <AvatarFallback>您</AvatarFallback>
           </Avatar>
         </div>

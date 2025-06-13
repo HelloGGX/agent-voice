@@ -1,9 +1,17 @@
+import { Journey } from './components/tempComponents/JourneyCard.vue';
+
 export type SpeechEventType = 'journey' | 'human_message' | 'ai_message';
 
-export interface Message {
-  type: string;
+export interface EventData {
+  event: SpeechEventType;
   data: {
-    event: SpeechEventType;
-    data: string | Record<string, any> | any[];
+    state: EventState;
+    content: string | Record<string, any> | Journey[];
   };
+}
+
+export enum EventState {
+  START = 'start',
+  END = 'end',
+  PROCESSING = 'processing',
 }

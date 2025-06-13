@@ -1,3 +1,5 @@
+import { EventData } from "@/types";
+
 /**
  * SSE事件数据结构定义
  * @template T 事件数据的泛型类型（默认为any）
@@ -40,7 +42,9 @@ export class SSEClient {
    */
   connect(reconnect = false): Promise<{ success: boolean }> {
     return new Promise(async (resolve, reject) => {
+      console.log('reconnect重连:', reconnect);
       if (reconnect) {
+        this.abortController?.abort();
         this.abortController = null;
       } else if (this.abortController) {
         return resolve({ success: true });
@@ -60,9 +64,9 @@ export class SSEClient {
           signal: this.abortController.signal,
           credentials: this.options?.withCredentials ? 'include' : 'same-origin',
         });
-
+        console.log('response', response);
         if (!response.ok) {
-          reject(new Error(`SSE连接失败: ${response.status}`));
+          return reject(new Error(`SSE连接失败: ${response.status}`));
         }
 
         console.log('SSE服务已连接');
@@ -145,7 +149,7 @@ export class SSEClient {
   /**
    * 注册事件处理器（保持与原始 API 兼容）
    */
-  on<T>(event: string, callback: (data: T) => void) {
+  on(event: string, callback: (data: EventData) => void) {
     const handlers = this.eventHandlers.get(event) || [];
     handlers.push(callback);
     this.eventHandlers.set(event, handlers);

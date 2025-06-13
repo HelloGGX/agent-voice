@@ -8,6 +8,7 @@ import {
   StateMachine,
 } from 'xstate';
 import { SSEClient } from '../services';
+import { EventData } from '@/types';
 
 export type SSEStateMachineProps = StateMachine<
   SSEContext,
@@ -31,10 +32,9 @@ export type SSEState = 'connecting' | 'open' | 'closed' | 'idle' | 'retry' | 'de
 export type SSEEvent =
   | { type: 'connect' }
   | { type: 'connecting' }
-  | { type: 'success' }
-  | { type: 'failure' }
   | { type: 'open' }
-  | { type: 'message'; data: any }
+  | { type: 'message'; data: EventData }
+  | { type: 'error' }
   | { type: 'closed' }
   | { type: 'idle' }
   | { type: 'retry' }
@@ -60,8 +60,6 @@ export const SSEStateMachine = setup({
   guards: {
     // 检查是否超过最大重试次数
     hasExceededMaxRetries: ({ context }) => {
-      // Add your guard condition here
-      console.log('hasExceededMaxRetries', context.retryCount > context.retryMaxCount);
       return context.retryCount > context.retryMaxCount;
     },
   },
@@ -78,7 +76,6 @@ export const SSEStateMachine = setup({
     }),
     // 管理重试次数
     handleRetryCount: assign(({ context, self }) => {
-      console.log('handleRetryCount:', context.retryCount, context.retryMaxCount);
       if (context.retryCount > context.retryMaxCount) {
         self.send({ type: 'closed' });
         return { ...context };
@@ -89,40 +86,77 @@ export const SSEStateMachine = setup({
       }
     }),
     handleMessage: assign(({ context, event }) => {
-      console.log('Received message:', event);
-      const newMessage = event;
-      return {
-        messages: [...(context.messages || []), newMessage],
-      };
+      if (event.type !== 'message') {
+        return {
+          ...context,
+        };
+      }
+      const newMessage = event.data;
+      console.log('Received message:', newMessage);
+      if (newMessage.event === 'ai_message') {
+        let assistantMessage = '';
+        switch (newMessage.data.state) {
+          case 'start':
+            return {
+              ...context,
+              messages: [...context.messages, newMessage],
+            };
+          case 'processing':
+            const data = newMessage.data.content;
+            assistantMessage = context.messages[context.messages.length - 1].content + data;
+            context.messages[context.messages.length - 1] = {
+              ...context.messages[context.messages.length - 1],
+              content: assistantMessage,
+            };
+            return { ...context };
+          case 'end':
+            assistantMessage += newMessage.data.content;
+            break;
+        }
+      } else if (newMessage.event === 'human_message') {
+        return {
+          ...context,
+          messages: [...context.messages, newMessage],
+        };
+      } else if (newMessage.event === 'journey') {
+        let message = JSON.parse(newMessage.data.content as string);
+        console.log('journey:', newMessage.data.content, message);
+        return {
+          ...context,
+          messages: [...context.messages, message],
+        };
+      }
+
+      return { ...context };
     }),
   },
   actors: {
-    sseClientActor: fromPromise(async () => {
+    sseClientActor: fromPromise(async ({ input }: { input: SSEContext }) => {
       try {
-        const res = await client.connect(); // 等待 connect 完成
+        const res = await client.connect(input.retryCount != 0); // 等待 connect 完成，retryCount不为 0 表示重连
         return res; // ✅ 正确 resolve 并返回结果
       } catch (err) {
         console.error('连接失败（Actor内部）:', err);
         throw err; // ✅ 正确地抛出错误，触发 onError
       }
     }),
-    retryDelayActor: fromPromise(({ input }: { input: SSEContext }) => {
+    retryDelayActor: fromPromise(async ({ input }: { input: SSEContext }) => {
       return new Promise((resolve) => {
-        // const delay = 3000;
         const delay = Math.min(
           input.retryDelay * Math.pow(input.retryBackoffFactor, input.retryCount),
           30000,
         );
-        console.log('Calculated delay:', delay);
-        setTimeout(resolve, delay);
+        setTimeout(() => {
+          return resolve(true);
+        }, delay);
       });
     }),
   },
 }).createMachine({
   context: {
     retryCount: 0,
-    retryDelay: 1000,
-    retryMaxCount: 3,
+    retryDelay: 2000,
+    retryMaxCount: 5,
     retryBackoffFactor: 1.2,
     sseClient: null,
     messages: [],
@@ -142,6 +176,7 @@ export const SSEStateMachine = setup({
       invoke: {
         id: 'sseClientActor',
         src: 'sseClientActor',
+        input: ({ context }) => ({ ...context }),
         onDone: {
           target: 'open',
         },
@@ -152,9 +187,13 @@ export const SSEStateMachine = setup({
       description: 'Attempting to establish an SSE connection.',
     },
     open: {
+      entry: 'resetRetryCount',
       on: {
         message: {
           actions: 'handleMessage',
+        },
+        error: {
+          target: 'retry',
         },
       },
       description: 'The SSE connection is successfully established and open.',

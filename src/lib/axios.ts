@@ -63,7 +63,7 @@ const handleHttpCode = (error: AxiosError<{ code: string; msg: string }>) => {
 };
 
 export const axios = Axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API ?? '/',
+  baseURL: import.meta.env.VITE_APP_BASE_API_DEV ?? '/',
   timeout: 120000,
 });
 
