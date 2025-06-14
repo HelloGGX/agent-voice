@@ -1,0 +1,141 @@
+.markdown-body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  color: #e0e0e0;
+  line-height: 1.8;
+  background-color: #1e1e2f;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-weight: 700;
+  color: #ffffff;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.3em;
+}
+
+.markdown-body h1 { font-size: 2.2em; }
+.markdown-body h2 { font-size: 1.8em; }
+.markdown-body h3 { font-size: 1.5em; }
+.markdown-body h4 { font-size: 1.3em; }
+.markdown-body h5 { font-size: 1.1em; }
+.markdown-body h6 { font-size: 1em; }
+
+.markdown-body p {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+.markdown-body a {
+  color: #61dafb;
+  text-decoration: none;
+}
+
+.markdown-body a:hover {
+  text-decoration: underline;
+}
+
+.markdown-body strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.markdown-body em {
+  color: #cccccc;
+  font-style: italic;
+}
+
+.markdown-body code {
+  background-color: #2d2d2d;
+  color: #f92672;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.95em;
+}
+
+.markdown-body pre {
+  background-color: #2d2d2d;
+  padding: 1em;
+  overflow-x: auto;
+  border-radius: 6px;
+  margin: 1em 0;
+  font-size: 0.9em;
+}
+
+.markdown-body pre code {
+  background-color: transparent;
+  padding: 0;
+  color: #ffffff;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  margin-left: 1.5em;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+.markdown-body li {
+  margin-bottom: 0.3em;
+}
+
+.markdown-body blockquote {
+  border-left: 4px solid #61dafb;
+  padding-left: 1em;
+  color: #aaaaaa;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.markdown-body thead {
+  background-color: #2d2d2d;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid #333;
+  padding: 0.6em;
+  text-align: left;
+  color: #dddddd;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 1em 0;
+}
+
+.markdown-body hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 2em 0;
+}
+
+/* 任务列表支持（需 markdown-it-task-lists 插件） */
+.markdown-body .task-list-item {
+  list-style: none;
+}
+.markdown-body .task-list-item-checkbox {
+  margin-right: 0.5em;
+  vertical-align: middle;
+  transform: translateY(-0.075em);
+}

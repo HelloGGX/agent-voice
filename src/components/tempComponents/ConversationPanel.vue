@@ -5,6 +5,10 @@ import { debounce } from '@/utils/optimization';
 import { Activity } from 'lucide-vue-next';
 import JourneyCard from './JourneyCard.vue';
 import { EventData } from '@/types';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+import '@/assets/styles/markdown.css';
+
 const props = withDefaults(
   defineProps<{
     messages: Array<EventData>;
@@ -16,12 +20,7 @@ const props = withDefaults(
     // otherProp: 'default value',
   },
 );
-watch(
-  () => props.messages,
-  (newVal) => {
-    console.log('newVal', newVal);
-  },
-);
+const renderedMessages = ref<Array<EventData>>([]);
 const scrollContainer = ref<HTMLElement>();
 const isNearBottom = ref(true);
 const showScrollPrompt = ref(false);
@@ -64,12 +63,34 @@ watch(
       showScrollPrompt.value = true;
     }
     prevMessagesLength = newVal.length;
+    // 更新渲染markdown
+    renderMarkdown(newVal);
   },
   { deep: true, flush: 'post' },
 );
 
+const renderMarkdown = async (messages: EventData[]) => {
+  const htmls = await Promise.all(
+    messages.map(async (msg) => {
+      if (msg.event !== 'journey' && typeof msg.data.content === 'string') {
+        return {
+          ...msg,
+          data: {
+            ...msg.data,
+            content: DOMPurify.sanitize(await marked.parse(msg.data.content)),
+          },
+        };
+      }
+      return msg;
+    }),
+  );
+  renderedMessages.value = htmls;
+};
+
 // 初始化滚动监听
 onMounted(() => {
+  renderMarkdown(props.messages);
+
   if (scrollContainer.value) {
     scrollContainer.value.addEventListener('scroll', handleScroll);
 
@@ -93,7 +114,7 @@ onUnmounted(() => {
   <main ref="scrollContainer" class="flex-1 overflow-y-auto p-4 relative">
     <div class="mx-auto space-y-6">
       <!-- 对话记录 -->
-      <template v-for="(msg, _index) in messages" :key="'message' + _index">
+      <template v-for="(msg, _index) in renderedMessages" :key="'message' + _index">
         <div :class="['flex gap-3', msg.event === 'human_message' ? 'justify-end' : '']">
           <Avatar v-if="msg.event === 'ai_message'" class="h-12 w-12">
             <AvatarFallback>助手</AvatarFallback>
@@ -108,7 +129,7 @@ onUnmounted(() => {
               v-if="msg.event === 'journey'"
               :data="Array.isArray(msg.data?.content) ? msg.data.content : [msg.data.content]"
             />
-            <p v-else>{{ msg.data.content }}</p>
+            <div v-else v-html="msg.data.content" class="markdown-body" readonly></div>
           </Card>
           <Avatar v-if="msg.event === 'human_message'" class="h-12 w-12">
             <AvatarFallback>您</AvatarFallback>
