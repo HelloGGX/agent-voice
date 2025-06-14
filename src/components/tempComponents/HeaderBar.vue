@@ -16,7 +16,7 @@ const connectStateText = computed(() => {
       return '重连中...';
     case 'open':
       return '在线';
-    case 'closed':
+    case 'failed':
       return '离线';
     default:
       return '未知状态';
@@ -33,7 +33,7 @@ const statusDotClass = computed(() => {
       return 'bg-yellow-500 animate-pulse';
     case 'open':
       return 'bg-green-500';
-    case 'closed':
+    case 'failed':
       return 'bg-red-500';
     default:
       return 'bg-gray-400';

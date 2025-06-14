@@ -9,30 +9,22 @@ import { Toaster } from '@/components/ui/sonner';
 import { useMachine } from '@xstate/vue';
 // import { useSpeechService } from '@/features/speechRecognition';
 import { createBrowserInspector } from '@statelyai/inspect';
-import { client, SSEState, SSEStateMachine } from './features/SSEConnection';
+import { SSEState, SSEStateMachine } from './features/SSEConnection';
 import 'vue-sonner/style.css';
 import { getAIChatApi } from './apis/AIChatApi';
-import { EventData } from './types';
 
 const { inspect } = createBrowserInspector({ autoStart: false });
 const { snapshot: SSESnapshot, send } = useMachine(SSEStateMachine, { inspect });
 
-watch(
-  () => SSESnapshot.value,
-  (snapshot) => {
-    console.log('watchSSESnapshot', snapshot.value, typeof snapshot.value);
-  },
-  {
-    immediate: true,
-  },
-);
-client.on('message', ( data: EventData ) => {
-  console.log('监听到消息:', data);
-  send({ type: 'message', data });
-});
-client.on('error', () => {
-  send({ type: 'error' });
-});
+// watch(
+//   () => SSESnapshot.value,
+//   (snapshot) => {
+//     console.log('watchSSESnapshot', snapshot.value);
+//   },
+//   {
+//     immediate: true,
+//   },
+// );
 
 /**
  * SSE服务状态信息
@@ -43,8 +35,8 @@ const connectState = computed<SSEState>(() => {
   if (snapshotValue.matches('connecting')) return 'connecting';
   if (snapshotValue.matches('delaying')) return 'delaying';
   if (snapshotValue.matches('open')) return 'open';
-  if (snapshotValue.matches('closed')) return 'closed';
-  return 'closed';
+  if (snapshotValue.matches('failed')) return 'failed';
+  return 'failed';
 });
 
 const messages = computed(() => {
@@ -55,12 +47,17 @@ onMounted(() => {
   // toast.error("401", {
   //   description: "test toast",
   // });
-  send({ type: 'connect' });
+  send({ type: 'CONNECT' });
   setTimeout(() => {
     getAIChatApi({
-      text: '你好',
+      text: '值机的流程是什么，分点分条，最好有表格形式',
     })
-  }, 2000);
+  }, 4000);
+  // setTimeout(() => {
+  //   getAIChatApi({
+  //     text: '你能帮我干什么',
+  //   })
+  // }, 22000);
 });
 </script>
 

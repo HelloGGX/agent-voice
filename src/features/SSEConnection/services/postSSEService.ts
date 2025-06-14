@@ -83,14 +83,12 @@ export class SSEClient {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const eventChunks = this.decoder.decode(value).split('\n\n').filter(Boolean);
+          const eventChunks = this.decoder.decode(value);
 
-          eventChunks.forEach((chunk) => {
-            const parsedEvent = this.parseSSEEvent(chunk);
-            if (parsedEvent) {
-              this.handleEvent('message', parsedEvent.data);
-            }
-          });
+          const parsedEvent = this.parseSSEEvent(eventChunks);
+          if (parsedEvent) {
+            this.handleEvent('message', parsedEvent.data);
+          }
         }
       } catch (error) {
         this.handleEvent('error', error);
@@ -125,7 +123,7 @@ export class SSEClient {
           try {
             result.data = JSON.parse(value);
           } catch {
-            result.data = value;
+            result.data = value + '\n';
           }
           break;
         case 'id':
